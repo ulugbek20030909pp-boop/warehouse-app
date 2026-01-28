@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-column flex-lg-row align-items-lg-end gap-3">
+  <div class="flex-grow-1">
+    <h4 class="mb-1">Products</h4>
+    <div class="text-secondary small">Click a product to see SKU table (color/size variants).</div>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+  <a class="btn btn-dark" href="/products/new">+ Add product</a>
+  <form class="d-flex gap-2" method="get" action="/groups">
+    <input class="form-control" name="q" value="{{ q }}" placeholder="Search by name...">
+    <button class="btn btn-outline-secondary">Search</button>
+  </form>
+</div>
+
+<div class="row g-3 mt-2">
+  {% for g in groups %}
+  {% set a = agg.get(g.id, {"variants":0,"uzum_qty":0,"wh_qty":0}) %}
+  <div class="col-12 col-sm-6 col-lg-4 col-xxl-3">
+    <a class="card h-100 text-decoration-none" href="/groups/{{ g.id }}">
+      {% if g.image_url %}
+      <img src="{{ g.image_url }}" class="card-img-top" alt="" style="object-fit:cover; height: 180px;">
+      {% else %}
+      <div class="card-img-top bg-light" style="height: 180px;"></div>
+      {% endif %}
+      <div class="card-body">
+        <div class="fw-semibold">{{ g.name }}</div>
+        <div class="text-secondary small">{{ g.category or "" }}</div>
+        <div class="mt-2 d-flex gap-2 flex-wrap">
+          <span class="badge text-bg-light border">SKUs: {{ a.variants }}</span>
+          <span class="badge text-bg-light border">Uzum qty: {{ a.uzum_qty }}</span>
+          <span class="badge text-bg-light border">Warehouse qty: {{ a.wh_qty }}</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+  {% if not groups %}
+    <div class="col-12">
+      <div class="alert alert-secondary">No products yet. Click <b>Sync Uzum</b> to import.</div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

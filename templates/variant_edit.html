@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
+  <div>
+    <h4 class="mb-1">{% if is_new %}Add SKU{% else %}Edit SKU{% endif %}</h4>
+    <div class="text-secondary small">
+      Product: <a href="/groups/{{ group.id }}">{{ group.name }}</a>
+    </div>
+  </div>
+  <a href="/groups/{{ group.id }}" class="btn btn-outline-secondary">← Back</a>
+</div>
+
+<div class="card mt-3">
+  <div class="card-body">
+    <form method="post">
+      <div class="row g-3">
+        <div class="col-12 col-lg-6">
+          <label class="form-label">SKU</label>
+          <input name="sku" class="form-control" value="{{ variant.sku }}">
+        </div>
+        <div class="col-12 col-lg-6">
+          <label class="form-label">Barcode</label>
+          <input name="barcode" class="form-control" value="{{ variant.barcode or "" }}">
+        </div>
+
+        <div class="col-6 col-lg-3">
+          <label class="form-label">Color</label>
+          <input name="color" class="form-control" value="{{ variant.color or "" }}">
+        </div>
+        <div class="col-6 col-lg-3">
+          <label class="form-label">Size</label>
+          <input name="size" class="form-control" value="{{ variant.size or "" }}">
+        </div>
+        <div class="col-12 col-lg-6">
+          <label class="form-label">Status</label>
+          <input name="status" class="form-control" value="{{ variant.status or "" }}">
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <label class="form-label">Uzum qty (read-only)</label>
+          <input class="form-control" value="{{ variant.uzum_quantity }}" readonly>
+        </div>
+        <div class="col-12 col-lg-4">
+          <label class="form-label">Warehouse qty</label>
+          <input name="warehouse_quantity" class="form-control" type="number" value="{{ variant.warehouse_quantity }}">
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button class="btn btn-dark" type="submit">Save</button>
+        <a class="btn btn-outline-secondary" href="/groups/{{ group.id }}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

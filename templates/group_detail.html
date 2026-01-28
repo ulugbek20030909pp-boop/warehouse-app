@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
+  <div>
+    <h4 class="mb-1">{{ group.name }}</h4>
+    <div class="text-secondary small">
+      Uzum productId: {{ group.uzum_product_id or "—" }} · Category: {{ group.category or "—" }}
+    </div>
+  </div>
+  <div class="d-flex gap-2">
+  <a href="/products/{{ group.id }}/edit" class="btn btn-dark">Edit product</a>
+  <a href="/products/{{ group.id }}/skus/new" class="btn btn-outline-dark">+ Add SKU</a>
+  <a href="/groups" class="btn btn-outline-secondary">← Back</a>
+</div>
+</div>
+
+<div class="row g-3 mt-2">
+  <div class="col-12 col-lg-4">
+    <div class="card">
+      {% if group.image_url %}
+      <img src="{{ group.image_url }}" class="card-img-top" alt="" style="object-fit:cover; height: 240px;">
+      {% else %}
+      <div class="card-img-top bg-light" style="height: 240px;"></div>
+      {% endif %}
+      <div class="card-body">
+        <div class="fw-semibold">General photos</div>
+        <div class="text-secondary small">Photo shown is best-effort from API.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-8">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="fw-semibold">SKU Table</div>
+            <div class="text-secondary small">Uzum stock vs your warehouse stock, barcode, and last 30 days sales.</div>
+          </div>
+        </div>
+
+        <div class="table-responsive mt-3">
+          <table class="table table-sm align-middle">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Status</th>
+                <th>Color</th>
+                <th>Size</th>
+                <th class="text-end">Uzum qty</th>
+                <th class="text-end">Warehouse qty</th>
+                <th>Barcode</th>
+                <th class="text-end">Sales (30d)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for v in variants %}
+              <tr>
+                <td class="fw-semibold">{{ v.sku }}</td>
+                <td>{{ v.status or "—" }}</td>
+                <td>{{ v.color or "—" }}</td>
+                <td>{{ v.size or "—" }}</td>
+                <td class="text-end">{{ v.uzum_quantity }}</td>
+                <td class="text-end">{{ v.warehouse_quantity }}</td>
+                <td class="text-muted">{{ v.barcode or "—" }}</td>
+                <td class="text-end">{{ sales_map.get(v.id, 0) }}</td>
+                <td class="text-end">
+                  <a class="btn btn-outline-dark btn-sm" href="/variants/{{ v.id }}/edit">Edit</a>
+                </td>
+              </tr>
+              {% endfor %}
+              {% if not variants %}
+              <tr><td colspan="9" class="text-secondary">No SKUs found for this product.</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
