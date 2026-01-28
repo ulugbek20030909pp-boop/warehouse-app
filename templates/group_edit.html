@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
+  <div>
+    <h4 class="mb-1">{% if group %}Edit product{% else %}Add product{% endif %}</h4>
+    <div class="text-secondary small">Create or edit products in your warehouse system.</div>
+  </div>
+  <a href="/groups" class="btn btn-outline-secondary">← Back</a>
+</div>
+
+{% if error %}
+<div class="alert alert-danger mt-3">{{ error }}</div>
+{% endif %}
+
+<div class="card mt-3">
+  <div class="card-body">
+    <form method="post" action="{% if group %}/products/{{ group.id }}/edit{% else %}/products/new{% endif %}">
+      <div class="row g-3">
+        <div class="col-12 col-lg-6">
+          <label class="form-label">Name</label>
+          <input class="form-control" name="name" value="{{ group.name if group else '' }}" required>
+        </div>
+        <div class="col-12 col-lg-3">
+          <label class="form-label">Category</label>
+          <input class="form-control" name="category" value="{{ group.category if group else '' }}">
+        </div>
+        <div class="col-12 col-lg-3">
+          <label class="form-label">Image URL</label>
+          <input class="form-control" name="image_url" value="{{ group.image_url if group else '' }}" placeholder="https://...">
+        </div>
+        <div class="col-12 d-flex gap-2">
+          <button class="btn btn-dark">{% if group %}Save{% else %}Create{% endif %}</button>
+          {% if group %}
+          <a class="btn btn-outline-dark" href="/groups/{{ group.id }}">Open SKU table</a>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
